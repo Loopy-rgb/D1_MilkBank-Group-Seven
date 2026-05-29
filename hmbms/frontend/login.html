@@ -67,25 +67,25 @@
             Supported User Roles
           </p>
           <div class="login-role-list">
-            <div class="login-role-item">
+            <a href="login-admin.html" class="login-role-item" style="display: flex; align-items: center; color: rgba(255,255,255,0.85); text-decoration: none; margin-bottom: 8px; padding: 4px; border-radius: var(--radius-sm); transition: background var(--transition);" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background=''">
               <span class="role-dot admin"></span>
-              Administrator
-            </div>
-            <div class="login-role-item">
+              Administrator Portal &rarr;
+            </a>
+            <a href="login-medtech.html" class="login-role-item" style="display: flex; align-items: center; color: rgba(255,255,255,0.85); text-decoration: none; margin-bottom: 8px; padding: 4px; border-radius: var(--radius-sm); transition: background var(--transition);" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background=''">
               <span class="role-dot medtech"></span>
-              Medical Technologist
-            </div>
-            <div class="login-role-item">
+              Medical Technologist Portal &rarr;
+            </a>
+            <a href="login-nurse.html" class="login-role-item" style="display: flex; align-items: center; color: rgba(255,255,255,0.85); text-decoration: none; margin-bottom: 8px; padding: 4px; border-radius: var(--radius-sm); transition: background var(--transition);" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background=''">
               <span class="role-dot nurse"></span>
-              Nurse / Midwife
-            </div>
-            <div class="login-role-item">
+              Nurse / Midwife Portal &rarr;
+            </a>
+            <div class="login-role-item" style="cursor: default; margin-bottom: 8px; padding: 4px;">
               <span class="role-dot donor"></span>
-              Donor
+              Donor (Register &amp; Screening)
             </div>
-            <div class="login-role-item">
+            <div class="login-role-item" style="cursor: default; margin-bottom: 8px; padding: 4px;">
               <span class="role-dot recipient"></span>
-              Recipient / Beneficiary
+              Recipient (Request Intake)
             </div>
           </div>
         </div>
@@ -96,14 +96,34 @@
         <h1 class="login-form-title">Welcome Back</h1>
         <p class="login-form-subtitle">Sign in to access your HMBMS dashboard.</p>
 
-        <!-- Role info note -->
-        <div class="login-note" role="note" aria-label="Login information">
-          <svg class="login-note-icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-          </svg>
-          <p>
-            <em>Staff, Donors, and Recipients all use this login. Your dashboard will be shown based on your account type.</em>
+        <!-- Role info note with quick autofill for testing -->
+        <div class="login-note" role="note" aria-label="Login information" style="background: rgba(26, 111, 168, 0.05); border: 1px solid var(--clr-border); border-radius: var(--radius-md); padding: 16px; margin-bottom: 24px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-weight: 700; color: var(--clr-primary-dark); font-size: 0.9rem;">
+            <svg class="login-note-icon" viewBox="0 0 24 24" aria-hidden="true" style="width: 18px; height: 18px; fill: var(--clr-primary); margin: 0;">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            <span>Secure Role-Based Portal</span>
+          </div>
+          <p style="font-size: 0.8rem; line-height: 1.4; margin-bottom: 12px; color: var(--clr-text-muted);">
+            To maintain strict data security and privacy boundaries, each user role has a unique secure account. Select a role below to preview or autofill credentials:
           </p>
+          <div style="display: flex; gap: 8px;">
+            <select id="demo-role-select" class="form-control" style="font-size: 0.82rem; padding: 6px 12px; height: 36px; flex: 1; border-radius: var(--radius-sm); border: 1px solid var(--clr-border);">
+              <option value="">-- Choose Account --</option>
+              <option value="admin">Administrator (admin)</option>
+              <option value="medtech">Lab MedTech (medtech_santos)</option>
+              <option value="nurse">Nurse/Midwife (nurse_cruz)</option>
+              <option value="donor">Donor (donor_maria)</option>
+              <option value="recipient">Recipient (recipient_ana)</option>
+            </select>
+            <button type="button" id="btn-quick-fill" class="btn btn-outline-dark" style="font-size: 0.82rem; padding: 0 14px; height: 36px; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer; border-color: var(--clr-primary); color: var(--clr-primary);">
+              Autofill
+            </button>
+          </div>
+          <div id="credentials-preview" style="margin-top: 12px; padding-top: 8px; border-top: 1px dashed var(--clr-border); font-size: 0.78rem; font-family: monospace; color: var(--clr-text-muted); display: none;">
+            <div>Username: <strong id="preview-user" style="color: var(--clr-text);"></strong></div>
+            <div>Password: <strong id="preview-pass" style="color: var(--clr-text);"></strong></div>
+          </div>
         </div>
 
         <!-- LOGIN FORM -->
@@ -235,7 +255,47 @@
       toggleBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
     });
 
-    // ── Basic client-side validation feedback (form is non-functional — placeholder)
+    // ── Demo Accounts Mapping
+    const demoAccounts = {
+      admin: { user: 'admin', pass: 'admin', role: 'admin' },
+      medtech: { user: 'medtech_santos', pass: 'MedtechPassword123!', role: 'medtech' },
+      nurse: { user: 'nurse_cruz', pass: 'NursePassword123!', role: 'nurse' },
+      donor: { user: 'donor_maria', pass: 'DonorPassword123!', role: 'donor' },
+      recipient: { user: 'recipient_ana', pass: 'RecipientPassword123!', role: 'recipient' }
+    };
+
+    // ── Select role interactive preview and autofill logic
+    const roleSelect = document.getElementById('demo-role-select');
+    const quickFillBtn = document.getElementById('btn-quick-fill');
+    const previewDiv = document.getElementById('credentials-preview');
+    const previewUser = document.getElementById('preview-user');
+    const previewPass = document.getElementById('preview-pass');
+
+    roleSelect.addEventListener('change', () => {
+      const selected = roleSelect.value;
+      if (selected && demoAccounts[selected]) {
+        previewUser.textContent = demoAccounts[selected].user;
+        previewPass.textContent = demoAccounts[selected].pass;
+        previewDiv.style.display = 'block';
+      } else {
+        previewDiv.style.display = 'none';
+      }
+    });
+
+    quickFillBtn.addEventListener('click', () => {
+      const selected = roleSelect.value;
+      if (selected && demoAccounts[selected]) {
+        document.getElementById('username-input').value = demoAccounts[selected].user;
+        document.getElementById('password-input').value = demoAccounts[selected].pass;
+        // Reset any borders
+        document.getElementById('username-input').style.borderColor = '';
+        document.getElementById('password-input').style.borderColor = '';
+      } else {
+        alert('Please choose a role account from the dropdown first!');
+      }
+    });
+
+    // ── Mock login routing (Stage 1 demo functionality)
     const loginForm = document.getElementById('login-form');
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -254,19 +314,50 @@
         return;
       }
 
-      // Placeholder — backend routing in Stage 2
       const btn = document.getElementById('login-submit-btn');
+      const originalText = btn.innerHTML;
       btn.textContent = 'Signing in…';
       btn.disabled = true;
+
       setTimeout(() => {
-        btn.innerHTML = `
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff" aria-hidden="true">
-            <path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/>
-          </svg>
-          Login`;
+        btn.innerHTML = originalText;
         btn.disabled = false;
-        alert('⚠️ Backend not yet connected. This is Stage 1 — login routing will be implemented in Stage 2.');
-      }, 800);
+
+        // Verify if credentials match any of the secure accounts
+        let authenticatedRole = null;
+
+        for (const roleKey in demoAccounts) {
+          const acc = demoAccounts[roleKey];
+          if (acc.user === username && acc.pass === password) {
+            authenticatedRole = acc.role;
+            break;
+          }
+        }
+
+        // Backwards compatibility for easy shortcut logins (e.g. nurse/nurse, admin/admin)
+        if (!authenticatedRole && username.toLowerCase() === password) {
+          const val = username.toLowerCase();
+          if (['admin', 'medtech', 'nurse', 'donor', 'recipient'].includes(val)) {
+            authenticatedRole = val;
+          }
+        }
+
+        if (authenticatedRole) {
+          if (authenticatedRole === 'admin') {
+            window.location.href = 'dashboard.html?role=admin';
+          } else if (authenticatedRole === 'medtech') {
+            window.location.href = 'dashboard.html?role=medtech';
+          } else if (authenticatedRole === 'nurse') {
+            window.location.href = 'dashboard.html?role=nurse';
+          } else if (authenticatedRole === 'donor') {
+            window.location.href = 'donor-screening.html';
+          } else if (authenticatedRole === 'recipient') {
+            window.location.href = 'recipient-request.html';
+          }
+        } else {
+          alert('❌ Invalid Credentials!\n\nPlease use the "Secure Role-Based Portal" helper at the top to select an account and autofill, or use matching shortcuts (e.g. nurse/nurse).');
+        }
+      }, 500);
     });
 
     // Reset error border on input
