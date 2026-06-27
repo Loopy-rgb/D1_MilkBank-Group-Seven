@@ -505,6 +505,7 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 40px 30px; /* room for floating badges */
 }
 
 .hero-card {
@@ -1212,8 +1213,8 @@ ul {
 }
 
 .hero-float-badge.badge-safe {
-  top: -20px;
-  right: -10px;
+  top: 8px;
+  right: 8px;
   animation-delay: 0s;
 }
 
@@ -1222,8 +1223,8 @@ ul {
 }
 
 .hero-float-badge.badge-cold {
-  bottom: 20px;
-  left: -20px;
+  bottom: 8px;
+  left: 8px;
   animation-delay: 1.5s;
 }
 
