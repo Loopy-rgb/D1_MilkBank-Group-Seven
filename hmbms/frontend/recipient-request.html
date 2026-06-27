@@ -49,7 +49,12 @@
         </div>
         <div class="form-group">
           <label class="form-label">Guardian Name</label>
-          <input type="text" class="form-control" required />
+          <input type="text" class="form-control" id="guardian-name" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Guardian Contact Number <span style="color: var(--clr-primary); font-size: 0.8rem;">(for SMS notifications)</span></label>
+          <input type="tel" class="form-control" id="guardian-contact" placeholder="09XXXXXXXXX" maxlength="11" pattern="09[0-9]{9}" required />
+          <small style="color: var(--clr-text-muted); font-size: 0.78rem; margin-top: 4px; display: block;">You will receive an SMS when your request is ready for pickup.</small>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
@@ -142,6 +147,22 @@
         quoteAmount.textContent = '₱' + fee.toLocaleString('en-US', {minimumFractionDigits: 2});
       } else {
         quoteBox.style.display = 'none';
+      }
+    });
+
+    // Contact Number: only allow digits, enforce 09XXXXXXXXX format
+    const contactInput = document.getElementById('guardian-contact');
+    contactInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+    contactInput.addEventListener('blur', (e) => {
+      const val = e.target.value;
+      if (val && (val.length !== 11 || !val.startsWith('09'))) {
+        e.target.style.borderColor = '#e74c3c';
+        e.target.title = 'Must be 11 digits starting with 09 (e.g. 09XXXXXXXXX)';
+      } else {
+        e.target.style.borderColor = '';
+        e.target.title = '';
       }
     });
 
